@@ -1,0 +1,109 @@
+{
+  "session_id": "sample_lecture_session_01",
+  "session_date": "2026-10-28 19:21:41",
+  "session_duration_sec": 1200,
+  "session_duration_formatted": "00:20:00",
+  "total_students": 8,
+  "present_count": 6,
+  "partial_count": 1,
+  "absent_count": 1,
+  "attendance_rate_pct": 75.0,
+  "records": [
+    {
+      "student_id": "STU-001",
+      "name": "Aarav Sharma",
+      "status": "Present",
+      "first_seen": "19:01:41",
+      "last_seen": "19:21:41",
+      "sustained_duration_sec": 1140.0,
+      "sustained_ratio_pct": 95.0,
+      "avg_engagement_pct": 86.9,
+      "distraction_count": 2,
+      "drowsy_count": 0
+    },
+    {
+      "student_id": "STU-002",
+      "name": "Priya Patel",
+      "status": "Present",
+      "first_seen": "19:01:41",
+      "last_seen": "19:21:41",
+      "sustained_duration_sec": 1104.0,
+      "sustained_ratio_pct": 92.0,
+      "avg_engagement_pct": 83.8,
+      "distraction_count": 3,
+      "drowsy_count": 1
+    },
+    {
+      "student_id": "STU-003",
+      "name": "Rohan Iyer",
+      "status": "Present",
+      "first_seen": "19:01:41",
+      "last_seen": "19:21:41",
+      "sustained_duration_sec": 1020.0,
+      "sustained_ratio_pct": 85.0,
+      "avg_engagement_pct": 71.2,
+      "distraction_count": 5,
+      "drowsy_count": 1
+    },
+    {
+      "student_id": "STU-004",
+      "name": "Ananya Sen",
+      "status": "Present",
+      "first_seen": "19:01:41",
+      "last_seen": "19:21:41",
+      "sustained_duration_sec": 1080.0,
+      "sustained_ratio_pct": 90.0,
+      "avg_engagement_pct": 80.3,
+      "distraction_count": 3,
+      "drowsy_count": 1
+    },
+    {
+      "student_id": "STU-005",
+      "name": "Vikram Rao",
+      "status": "Present",
+      "first_seen": "19:01:41",
+      "last_seen": "19:21:41",
+      "sustained_duration_sec": 936.0,
+      "sustained_ratio_pct": 78.0,
+      "avg_engagement_pct": 64.9,
+      "distraction_count": 7,
+      "drowsy_count": 2
+    },
+    {
+      "student_id": "STU-006",
+      "name": "Maya Nambiar",
+      "status": "Present",
+      "first_seen": "19:01:41",
+      "last_seen": "19:21:41",
+      "sustained_duration_sec": 768.0,
+      "sustained_ratio_pct": 64.0,
+      "avg_engagement_pct": 57.5,
+      "distraction_count": 8,
+      "drowsy_count": 2
+    },
+    {
+      "student_id": "STU-007",
+      "name": "Karthik Verma",
+      "status": "Partial Attendance",
+      "first_seen": "19:01:41",
+      "last_seen": "19:21:41",
+      "sustained_duration_sec": 540.0,
+      "sustained_ratio_pct": 45.0,
+      "avg_engagement_pct": 49.0,
+      "distraction_count": 10,
+      "drowsy_count": 3
+    },
+    {
+      "student_id": "STU-008",
+      "name": "Sneha Kulkarni",
+      "status": "Absent (< 30% presence)",
+      "first_seen": "19:01:41",
+      "last_seen": "19:21:41",
+      "sustained_duration_sec": 180.0,
+      "sustained_ratio_pct": 15.0,
+      "avg_engagement_pct": 35.7,
+      "distraction_count": 13,
+      "drowsy_count": 4
+    }
+  ]
+}

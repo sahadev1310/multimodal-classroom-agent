@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Classroom Video Processing | Multimodal Agent</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <a href="/" class="nav-brand">
+            <div class="brand-icon">🎓</div>
+            <span>Classroom Multimodal Intelligence</span>
+        </a>
+        <nav class="nav-links">
+            <a href="/" class="nav-link">Live Classroom</a>
+            <a href="/upload" class="nav-link active">Batch Video Analysis</a>
+            <a href="/analytics" class="nav-link">Session Analytics</a>
+            <a href="/roster" class="nav-link">Student Roster</a>
+        </nav>
+        <div class="nav-actions">
+            <span class="badge-offline">
+                <span class="pulse-dot"></span> 100% Privacy-Preserving Offline
+            </span>
+        </div>
+    </header>
+
+    <main class="app-container">
+
+        <section class="card" style="margin-bottom: 2rem;">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <span>📁 Upload Recorded Classroom Video or Audio</span>
+                </h2>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                Upload a recorded lecture or classroom session (MP4, AVI, MKV, WebM, WAV). The system automatically runs multi-person face tracking, sustained presence validation, audio speech interaction modeling, and pedagogical AI agent reasoning.
+            </p>
+
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
+                    <div style="flex: 1; min-width: 250px;">
+                        <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.4rem;">Select Video / Audio File:</label>
+                        <input type="file" id="videoFileInput" name="video_file" accept="video/*,audio/*" required
+                               style="width: 100%; padding: 0.6rem; background: rgba(15,23,42,0.8); border: 1px solid var(--border-color); border-radius: 8px; color: #fff;">
+                    </div>
+                    <div style="flex: 1; min-width: 250px;">
+                        <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.4rem;">Topic / Lecture Title:</label>
+                        <input type="text" id="topicInput" name="topic" placeholder="e.g. Data Structures & Algorithms - Lecture 4"
+                               style="width: 100%; padding: 0.6rem; background: rgba(15,23,42,0.8); border: 1px solid var(--border-color); border-radius: 8px; color: #fff;">
+                    </div>
+                    <div>
+                        <button type="submit" id="submitBtn" class="btn btn-primary" style="padding: 0.65rem 1.4rem;">
+                            🚀 Process Multimodal Signals
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div id="processingIndicator" style="display: none; margin-top: 1.5rem; text-align: center;">
+                <div style="font-size: 0.95rem; font-weight: 600; color: var(--accent-cyan); margin-bottom: 0.5rem;">
+                    ⚙️ Analyzing Video Frames, Extracting Audio Spectrogram, and Evaluating Sustained Presence...
+                </div>
+                <div class="progress-bar-container" style="height: 10px;">
+                    <div class="progress-bar-fill" style="width: 100%; background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan)); animation: pulse 1.5s infinite;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESULTS CONTAINER -->
+        <section id="resultsSection" style="display: none;">
+
+            <!-- KPI SUMMARY -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon emerald">👥</div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Present Students</span>
+                        <span class="kpi-val" id="resPresentCount">0</span>
+                        <span class="kpi-sub" id="resAttendanceRate">0% Rate</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-icon cyan">📈</div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Average Engagement</span>
+                        <span class="kpi-val" id="resAvgCei">0%</span>
+                        <span class="kpi-sub">Multimodal Index</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-icon amber">🎙️</div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Active Discussion</span>
+                        <span class="kpi-val" id="resDiscussionRatio">0%</span>
+                        <span class="kpi-sub">Audio Energy Share</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-icon purple">⏱️</div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Session Duration</span>
+                        <span class="kpi-val" id="resDuration">0s</span>
+                        <span class="kpi-sub">Recorded Feed</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHARTS AND SUGGESTIONS SPLIT -->
+            <div class="dashboard-grid">
+                
+                <!-- BATCH ENGAGEMENT CHART -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>📈 Session Multimodal Dynamics Timeline</span>
+                        </h2>
+                    </div>
+                    <div style="height: 280px; width: 100%;">
+                        <canvas id="batchDynamicsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- BATCH AI SUGGESTIONS -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>🤖 Pedagogical Teaching Suggestions</span>
+                        </h2>
+                    </div>
+                    <div class="suggestions-container" id="batchSuggestionsContainer"></div>
+                </div>
+
+            </div>
+
+            <!-- ATTENDANCE REPORT TABLE -->
+            <div class="card" style="margin-top: 1.5rem;">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span>📋 Sustained Presence Attendance Log</span>
+                    </h2>
+                    <div style="display: flex; gap: 0.6rem;">
+                        <a id="downloadCsvBtn" href="#" class="btn btn-secondary btn-sm">📥 Download CSV</a>
+                        <a id="downloadJsonBtn" href="#" class="btn btn-secondary btn-sm">📥 Download JSON</a>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Attendance Status</th>
+                                <th>First Seen</th>
+                                <th>Last Seen</th>
+                                <th>Sustained Presence (s)</th>
+                                <th>Continuity Ratio</th>
+                                <th>Avg Engagement</th>
+                            </tr>
+                        </thead>
+                        <tbody id="batchAttendanceTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <p>Multimodal Attendance & Engagement Agent &copy; 2026 | Computer Vision &bull; Audio Signal Processing &bull; Agentic Decision Support</p>
+    </footer>
+
+    <script>
+        let batchChart = null;
+
+        document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+
+            const indicator = document.getElementById("processingIndicator");
+            const submitBtn = document.getElementById("submitBtn");
+            const resultsSec = document.getElementById("resultsSection");
+
+            indicator.style.display = "block";
+            submitBtn.disabled = true;
+            submitBtn.innerText = "⏳ Processing...";
+
+            try {
+                const res = await fetch("/api/upload_video", {
+                    method: "POST",
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (!res.ok) {
+                    alert("Error: " + (data.error || "Failed to process video"));
+                    return;
+                }
+
+                // Render Results
+                renderBatchResults(data);
+                resultsSec.style.display = "block";
+                resultsSec.scrollIntoView({ behavior: "smooth" });
+            } catch (err) {
+                alert("Upload failed: " + err.message);
+            } finally {
+                indicator.style.display = "none";
+                submitBtn.disabled = false;
+                submitBtn.innerText = "🚀 Process Multimodal Signals";
+            }
+        });
+
+        function renderBatchResults(data) {
+            const att = data.attendance || {};
+            const dyn = data.dynamics || {};
+            const aud = data.audio_report || {};
+
+            // Render KPIs
+            document.getElementById("resPresentCount").innerText = `${att.present_count || 0} / ${att.total_students || 0}`;
+            document.getElementById("resAttendanceRate").innerText = `${att.attendance_rate_pct || 0}% Attendance`;
+            document.getElementById("resAvgCei").innerText = `${dyn.average_cei || 0}%`;
+            document.getElementById("resDiscussionRatio").innerText = `${aud.discussion_ratio || 0}%`;
+            document.getElementById("resDuration").innerText = `${data.video_duration_sec || 0}s`;
+
+            // Export Links
+            document.getElementById("downloadCsvBtn").href = `/api/session/export/${data.session_id}/csv`;
+            document.getElementById("downloadJsonBtn").href = `/api/session/export/${data.session_id}/json`;
+
+            // Render Table
+            const tbody = document.getElementById("batchAttendanceTableBody");
+            let tableHtml = "";
+            (att.records || []).forEach(r => {
+                let statusClass = "absent";
+                if (r.status === "Present") statusClass = "present";
+                else if (r.status.includes("Partial")) statusClass = "partial";
+
+                tableHtml += `
+                    <tr>
+                        <td><strong>${r.student_id}</strong></td>
+                        <td>${r.name}</td>
+                        <td><span class="status-badge ${statusClass}">${r.status}</span></td>
+                        <td>${r.first_seen}</td>
+                        <td>${r.last_seen}</td>
+                        <td>${r.sustained_duration_sec}s</td>
+                        <td>${r.sustained_ratio_pct}%</td>
+                        <td><strong>${r.avg_engagement_pct}%</strong></td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = tableHtml;
+
+            // Render Suggestions
+            const suggContainer = document.getElementById("batchSuggestionsContainer");
+            let suggHtml = "";
+            (data.suggestions || []).forEach(s => {
+                let catClass = (s.category || "pacing").toLowerCase();
+                suggHtml += `
+                    <div class="suggestion-card ${catClass}">
+                        <div class="suggestion-header">
+                            <span class="suggestion-tag">${s.category}</span>
+                            <span class="suggestion-time">${s.time_formatted}</span>
+                        </div>
+                        <div class="suggestion-title">${s.title}</div>
+                        <div class="suggestion-body">${s.suggestion}</div>
+                        <div class="suggestion-source">⚡ Source: ${s.source}</div>
+                    </div>
+                `;
+            });
+            suggContainer.innerHTML = suggHtml || `<div style="padding:1rem; color:var(--text-muted)">No critical pedagogical triggers required.</div>`;
+
+            // Render Chart
+            renderBatchChart(dyn.time_series || []);
+        }
+
+        function renderBatchChart(series) {
+            const ctx = document.getElementById("batchDynamicsChart");
+            if (!ctx) return;
+
+            const labels = series.map(s => s.time_str);
+            const ceiData = series.map(s => s.cei);
+            const visData = series.map(s => s.visual_score);
+            const audData = series.map(s => s.audio_score);
+
+            if (batchChart) batchChart.destroy();
+
+            batchChart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: "Classroom Engagement Index (CEI)",
+                            data: ceiData,
+                            borderColor: "#06b6d4",
+                            backgroundColor: "rgba(6, 182, 212, 0.15)",
+                            borderWidth: 2.5,
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: "Visual Focus (%)",
+                            data: visData,
+                            borderColor: "#10b981",
+                            borderWidth: 1.5,
+                            borderDash: [4, 4]
+                        },
+                        {
+                            label: "Audio Dynamics (%)",
+                            data: audData,
+                            borderColor: "#f59e0b",
+                            borderWidth: 1.5,
+                            borderDash: [2, 2]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { ticks: { color: "#94a3b8", maxTicksLimit: 12 } },
+                        y: { min: 0, max: 100, ticks: { color: "#94a3b8" } }
+                    },
+                    plugins: { legend: { labels: { color: "#cbd5e1" } } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

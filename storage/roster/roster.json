@@ -1,0 +1,27 @@
+{
+  "STU-001": {
+    "student_id": "STU-001",
+    "name": "Aarav Sharma",
+    "department": "Computer Science"
+  },
+  "STU-002": {
+    "student_id": "STU-002",
+    "name": "Priya Patel",
+    "department": "Data Science"
+  },
+  "STU-003": {
+    "student_id": "STU-003",
+    "name": "Rohan Iyer",
+    "department": "AI & Robotics"
+  },
+  "STU-004": {
+    "student_id": "STU-004",
+    "name": "Ananya Sen",
+    "department": "Computer Science"
+  },
+  "STU-005": {
+    "student_id": "STU-005",
+    "name": "Vikram Rao",
+    "department": "Electrical Eng"
+  }
+}

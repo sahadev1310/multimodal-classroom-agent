@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multimodal Attendance & Engagement Agent</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Chart.js for real-time visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- NAVBAR (Frontend Layer) -->
+    <header class="navbar">
+        <a href="/" class="nav-brand">
+            <div class="brand-icon">🎓</div>
+            <span>Classroom Multimodal Intelligence</span>
+        </a>
+        <nav class="nav-links">
+            <a href="/" class="nav-link active">Live Classroom</a>
+            <a href="/upload" class="nav-link">Batch Video Analysis</a>
+            <a href="/analytics" class="nav-link">Session Analytics</a>
+            <a href="/roster" class="nav-link">Student Roster</a>
+        </nav>
+        <div class="nav-actions">
+            <span class="badge-offline">
+                <span class="pulse-dot"></span> 100% Privacy-Preserving Offline
+            </span>
+            <button id="togglePrivacyBtn" class="btn btn-secondary btn-sm" title="Toggle real-time face blurring for privacy">
+                🛡️ Face Anonymization: OFF
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="app-container">
+
+        <!-- TOP KPI TILES -->
+        <section class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon cyan">📊</div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Engagement Index (CEI)</span>
+                    <span class="kpi-val" id="kpiCei">75%</span>
+                    <span class="kpi-sub" id="kpiState">Moderately Engaged</span>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon emerald">👥</div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Active Participants</span>
+                    <span class="kpi-val" id="kpiActiveStudents">0</span>
+                    <span class="kpi-sub" id="hudStudentsCount">0 Students Detected</span>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon blue">✅</div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Sustained Attendance</span>
+                    <span class="kpi-val" id="kpiAttendanceRate">0%</span>
+                    <span class="kpi-sub">&ge; 60% Sustained Presence</span>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon amber">🎙️</div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Audio Dynamics</span>
+                    <span class="kpi-val" id="kpiAudioCategory" style="font-size: 1.3rem;">Quiet</span>
+                    <span class="kpi-sub">VAD & Speech Analysis</span>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon purple">⚠️</div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Attention Drops</span>
+                    <span class="kpi-val" id="kpiAttentionDrops">0</span>
+                    <span class="kpi-sub">Anomalies Detected</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- DASHBOARD SPLIT GRID -->
+        <div class="dashboard-grid">
+
+            <!-- LEFT COLUMN: LIVE VIDEO & REAL-TIME CHART -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                
+                <!-- VIDEO FEED CARD -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>📹 Live Classroom Multi-Person Feed</span>
+                        </h2>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button id="toggleCameraBtn" class="btn btn-secondary btn-sm">
+                                💻 Switch to Browser Webcam
+                            </button>
+                            <button id="stopSessionBtn" class="btn btn-danger btn-sm">
+                                ⏹️ Finalize Session
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="video-viewport">
+                        <!-- Server Stream Image -->
+                        <img id="serverVideoFeed" class="video-stream-img" src="/video_feed" alt="Live Classroom Stream">
+                        <!-- Browser Webcam Video Element (Dual-mode fallback) -->
+                        <video id="liveVideo" autoplay playsinline muted style="display: none; width:100%; height:100%; object-fit:cover;"></video>
+
+                        <!-- HUD OVERLAY -->
+                        <div class="video-overlay-hud">
+                            <span class="hud-pill" id="hudSessionTime">00:00:00</span>
+                            <span class="hud-pill" style="background: rgba(16, 185, 129, 0.85);">● LIVE AI PROCESSING</span>
+                        </div>
+                    </div>
+
+                    <!-- AUDIO ENERGY VISUALIZER -->
+                    <div class="audio-meter-container">
+                        <span style="font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); min-width: 90px;">Audio Level:</span>
+                        <div class="audio-meter-bar">
+                            <div class="audio-meter-fill" id="audioMeterFill"></div>
+                        </div>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">Multimodal Sync</span>
+                    </div>
+                </div>
+
+                <!-- ENGAGEMENT TIME-SERIES CHART -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>📈 Dynamic Classroom Engagement Timeline</span>
+                        </h2>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">Sliding Window Dynamics</span>
+                    </div>
+                    <div style="height: 250px; width: 100%;">
+                        <canvas id="engagementChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: AI TEACHING SUGGESTIONS FEED -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                
+                <div class="card" style="height: 100%;">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>🤖 AI Teaching Suggestions Agent</span>
+                        </h2>
+                        <button id="toggleTtsBtn" class="btn btn-secondary btn-sm" title="Enable audible voice synthesis for suggestions">
+                            🔈 Voice Readout: OFF
+                        </button>
+                    </div>
+
+                    <p style="font-size: 0.84rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                        Real-time pedagogical decision support based on sustained presence, attention drops, and interaction levels.
+                    </p>
+
+                    <!-- SUGGESTION CARDS FEED -->
+                    <div class="suggestions-container" id="suggestionsContainer">
+                        <!-- Populated dynamically via live_feed.js -->
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- BOTTOM SECTION: SUSTAINED PRESENCE ATTENDANCE TABLE -->
+        <section class="card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <span>📋 Automated Attendance & Sustained Presence Tracking</span>
+                </h2>
+                <div style="display: flex; gap: 0.6rem;">
+                    <a href="/api/session/export/{{ session.session_id }}/csv" class="btn btn-secondary btn-sm">
+                        📥 Export Attendance CSV
+                    </a>
+                    <a href="/api/session/export/{{ session.session_id }}/json" class="btn btn-secondary btn-sm">
+                        📥 Export JSON
+                    </a>
+                </div>
+            </div>
+
+            <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 1rem;">
+                Attendance is marked using <strong>sustained presence logic</strong> (&ge; 60% session continuity) rather than single-frame detection, eliminating passersby false positives.
+            </p>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Full Name</th>
+                            <th>Attendance Status</th>
+                            <th>Sustained Presence (s)</th>
+                            <th>Continuity Ratio</th>
+                            <th>Avg Attention</th>
+                            <th>Behavioral Flags</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceTableBody">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 1.5rem; color: var(--text-muted);">
+                                Initializing video processing pipeline...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>Multimodal Attendance & Engagement Agent &copy; 2026 | Computer Vision &bull; Audio Signal Processing &bull; Agentic Decision Support</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/live_feed.js') }}"></script>
+</body>
+</html>

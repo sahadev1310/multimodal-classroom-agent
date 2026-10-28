@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Dynamics Analytics & Attendance Reports | Multimodal Agent</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <a href="/" class="nav-brand">
+            <div class="brand-icon">🎓</div>
+            <span>Classroom Multimodal Intelligence</span>
+        </a>
+        <nav class="nav-links">
+            <a href="/" class="nav-link">Live Classroom</a>
+            <a href="/upload" class="nav-link">Batch Video Analysis</a>
+            <a href="/analytics" class="nav-link active">Session Analytics</a>
+            <a href="/roster" class="nav-link">Student Roster</a>
+        </nav>
+        <div class="nav-actions">
+            <span class="badge-offline">
+                <span class="pulse-dot"></span> 100% Privacy-Preserving Offline
+            </span>
+        </div>
+    </header>
+
+    <main class="app-container">
+
+        <!-- SAVED SESSIONS SELECTOR -->
+        <section class="card" style="margin-bottom: 1.5rem;">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <span>📊 Historical Classroom Sessions & Reports</span>
+                </h2>
+            </div>
+            <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                <label style="font-size: 0.88rem; color: var(--text-muted);">Select Session:</label>
+                <select id="sessionSelect" style="flex: 1; max-width: 450px; padding: 0.6rem; background: rgba(15,23,42,0.85); border: 1px solid var(--border-color); border-radius: 8px; color: #fff;">
+                    {% if saved_sessions %}
+                        {% for s in saved_sessions %}
+                            <option value="{{ s.session_id }}">{{ s.session_id }} ({{ s.session_date }}) - {{ s.attendance_rate }}% Attendance</option>
+                        {% endfor %}
+                    {% else %}
+                        <option value="">No completed sessions found yet</option>
+                    {% endif %}
+                </select>
+                <button id="loadSessionBtn" class="btn btn-primary btn-sm">Load Analytics</button>
+            </div>
+        </section>
+
+        <!-- LOADED SESSION DETAILS -->
+        <div id="analyticsContent">
+
+            <!-- KPI ROW -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon blue">⏱️</div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Session Duration</span>
+                        <span class="kpi-val" id="analyticsDuration">--:--:--</span>
+                        <span class="kpi-sub" id="analyticsDate">Session Date</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-icon emerald">👥</div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Sustained Attendance</span>
+                        <span class="kpi-val" id="analyticsAttRate">0%</span>
+                        <span class="kpi-sub" id="analyticsPresentCount">0 Present</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-icon cyan">📈</div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Average Engagement</span>
+                        <span class="kpi-val" id="analyticsAvgCei">0%</span>
+                        <span class="kpi-sub">Classroom Engagement Index</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-icon rose" style="background: rgba(244,63,94,0.15); color: var(--accent-rose);">📉</div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Attention Drops</span>
+                        <span class="kpi-val" id="analyticsDropsCount">0</span>
+                        <span class="kpi-sub">Attention Anomalies</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TIMELINE CHART -->
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span>📈 Longitudinal Multimodal Attention & Interaction Trajectory</span>
+                    </h2>
+                </div>
+                <div style="height: 300px; width: 100%;">
+                    <canvas id="historicalChart"></canvas>
+                </div>
+            </div>
+
+            <!-- ANOMALIES & ATTENDANCE SPLIT -->
+            <div class="dashboard-grid">
+                
+                <!-- ATTENTION DROPS & INTERACTION PEAKS LIST -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>🔍 Detected Dynamic Events (Drops & Peaks)</span>
+                        </h2>
+                    </div>
+                    <div id="eventsContainer" style="display:flex; flex-direction:column; gap:0.75rem; max-height:360px; overflow-y:auto;"></div>
+                </div>
+
+                <!-- EXPORT & SUMMARY CARD -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>📥 Export Session Intelligence</span>
+                        </h2>
+                    </div>
+                    <p style="font-size:0.86rem; color:var(--text-secondary); margin-bottom:1.5rem;">
+                        Export official timestamped attendance records, sustained presence durations, and engagement metrics for institutional record-keeping.
+                    </p>
+                    <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                        <a id="exportCsvBtn" href="#" class="btn btn-primary">
+                            📄 Download Attendance CSV Record
+                        </a>
+                        <a id="exportJsonBtn" href="#" class="btn btn-secondary">
+                            💾 Download Raw Telemetry JSON
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- STUDENT ATTENDANCE TABLE -->
+            <div class="card" style="margin-top: 1.5rem;">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span>📋 Participant Attendance & Sustained Presence Details</span>
+                    </h2>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Full Name</th>
+                                <th>Attendance Status</th>
+                                <th>First Seen</th>
+                                <th>Last Seen</th>
+                                <th>Sustained Time (s)</th>
+                                <th>Continuity Ratio</th>
+                                <th>Avg Engagement</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historicalTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <p>Multimodal Attendance & Engagement Agent &copy; 2026 | Computer Vision &bull; Audio Signal Processing &bull; Agentic Decision Support</p>
+    </footer>
+
+    <script>
+        let histChart = null;
+
+        document.getElementById("loadSessionBtn").addEventListener("click", () => {
+            const sid = document.getElementById("sessionSelect").value;
+            if (sid) loadSessionData(sid);
+        });
+
+        async function loadSessionData(sessionId) {
+            try {
+                const res = await fetch(`/api/session/details/${sessionId}`);
+                if (!res.ok) return;
+                const data = await res.json();
+                renderSessionDetails(data, sessionId);
+            } catch (e) {
+                alert("Failed to load session details: " + e.message);
+            }
+        }
+
+        function renderSessionDetails(data, sessionId) {
+            const att = data.attendance || {};
+            const dyn = data.dynamics || {};
+
+            document.getElementById("analyticsDuration").innerText = att.session_duration_formatted || "00:00:00";
+            document.getElementById("analyticsDate").innerText = att.session_date || "N/A";
+            document.getElementById("analyticsAttRate").innerText = `${att.attendance_rate_pct || 0}%`;
+            document.getElementById("analyticsPresentCount").innerText = `${att.present_count || 0} Present / ${att.total_students || 0} Enrolled`;
+            document.getElementById("analyticsAvgCei").innerText = `${dyn.average_cei || 0}%`;
+            document.getElementById("analyticsDropsCount").innerText = (dyn.attention_drops || []).length;
+
+            document.getElementById("exportCsvBtn").href = `/api/session/export/${sessionId}/csv`;
+            document.getElementById("exportJsonBtn").href = `/api/session/export/${sessionId}/json`;
+
+            // Render Events (Drops & Peaks)
+            const evContainer = document.getElementById("eventsContainer");
+            let evHtml = "";
+
+            (dyn.attention_drops || []).forEach(d => {
+                evHtml += `
+                    <div class="suggestion-card fatigue" style="border-left-color: var(--accent-rose);">
+                        <div class="suggestion-header">
+                            <span class="suggestion-tag" style="background: rgba(244,63,94,0.2); color: var(--accent-rose);">ATTENTION DROP</span>
+                            <span class="suggestion-time">${d.time_str}</span>
+                        </div>
+                        <div class="suggestion-body">${d.description}</div>
+                    </div>
+                `;
+            });
+
+            (dyn.interaction_peaks || []).forEach(p => {
+                evHtml += `
+                    <div class="suggestion-card kudos">
+                        <div class="suggestion-header">
+                            <span class="suggestion-tag" style="background: rgba(16,185,129,0.2); color: var(--accent-emerald);">INTERACTION PEAK</span>
+                            <span class="suggestion-time">${p.time_str}</span>
+                        </div>
+                        <div class="suggestion-body">${p.description}</div>
+                    </div>
+                `;
+            });
+
+            evContainer.innerHTML = evHtml || `<div style="padding:1rem; color:var(--text-muted)">No dynamic anomalies recorded for this session.</div>`;
+
+            // Render Attendance Records
+            const tbody = document.getElementById("historicalTableBody");
+            let tableHtml = "";
+            (att.records || []).forEach(r => {
+                let statusClass = "absent";
+                if (r.status === "Present") statusClass = "present";
+                else if (r.status.includes("Partial")) statusClass = "partial";
+
+                tableHtml += `
+                    <tr>
+                        <td><strong>${r.student_id}</strong></td>
+                        <td>${r.name}</td>
+                        <td><span class="status-badge ${statusClass}">${r.status}</span></td>
+                        <td>${r.first_seen}</td>
+                        <td>${r.last_seen}</td>
+                        <td>${r.sustained_duration_sec}s</td>
+                        <td>${r.sustained_ratio_pct}%</td>
+                        <td><strong>${r.avg_engagement_pct}%</strong></td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = tableHtml;
+
+            // Render Chart
+            renderChart(dyn.time_series || []);
+        }
+
+        function renderChart(series) {
+            const ctx = document.getElementById("historicalChart");
+            if (!ctx) return;
+
+            const labels = series.map(s => s.time_str);
+            const ceiData = series.map(s => s.cei);
+            const visData = series.map(s => s.visual_score);
+            const audData = series.map(s => s.audio_score);
+
+            if (histChart) histChart.destroy();
+
+            histChart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: "Classroom Engagement Index (CEI)",
+                            data: ceiData,
+                            borderColor: "#06b6d4",
+                            backgroundColor: "rgba(6, 182, 212, 0.15)",
+                            borderWidth: 2.5,
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: "Visual Focus (%)",
+                            data: visData,
+                            borderColor: "#10b981",
+                            borderWidth: 1.5,
+                            borderDash: [4, 4]
+                        },
+                        {
+                            label: "Audio Activity (%)",
+                            data: audData,
+                            borderColor: "#f59e0b",
+                            borderWidth: 1.5,
+                            borderDash: [2, 2]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { ticks: { color: "#94a3b8", maxTicksLimit: 12 } },
+                        y: { min: 0, max: 100, ticks: { color: "#94a3b8" } }
+                    },
+                    plugins: { legend: { labels: { color: "#cbd5e1" } } }
+                }
+            });
+        }
+
+        // Auto-load first session on page load
+        const initSelect = document.getElementById("sessionSelect");
+        if (initSelect && initSelect.value) {
+            loadSessionData(initSelect.value);
+        }
+    </script>
+</body>
+</html>

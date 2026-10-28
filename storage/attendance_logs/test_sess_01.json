@@ -1,0 +1,73 @@
+{
+  "session_id": "test_sess_01",
+  "session_date": "2026-10-28 19:23:53",
+  "session_duration_sec": 60.0,
+  "session_duration_formatted": "00:01:00",
+  "total_students": 5,
+  "present_count": 1,
+  "partial_count": 1,
+  "absent_count": 3,
+  "attendance_rate_pct": 20.0,
+  "records": [
+    {
+      "student_id": "STU-001",
+      "name": "Aarav Sharma",
+      "status": "Present",
+      "first_seen": "19:23:53",
+      "last_seen": "19:23:53",
+      "sustained_duration_sec": 55.0,
+      "sustained_ratio_pct": 91.7,
+      "avg_engagement_pct": 75.0,
+      "distraction_count": 0,
+      "drowsy_count": 0
+    },
+    {
+      "student_id": "STU-002",
+      "name": "Priya Patel",
+      "status": "Partial Attendance",
+      "first_seen": "19:23:53",
+      "last_seen": "19:23:53",
+      "sustained_duration_sec": 25.0,
+      "sustained_ratio_pct": 41.7,
+      "avg_engagement_pct": 75.0,
+      "distraction_count": 0,
+      "drowsy_count": 0
+    },
+    {
+      "student_id": "STU-003",
+      "name": "Rohan Iyer",
+      "status": "Absent (Not Detected)",
+      "first_seen": "N/A",
+      "last_seen": "N/A",
+      "sustained_duration_sec": 0.0,
+      "sustained_ratio_pct": 0.0,
+      "avg_engagement_pct": 0.0,
+      "distraction_count": 0,
+      "drowsy_count": 0
+    },
+    {
+      "student_id": "STU-004",
+      "name": "Ananya Sen",
+      "status": "Absent (Not Detected)",
+      "first_seen": "N/A",
+      "last_seen": "N/A",
+      "sustained_duration_sec": 0.0,
+      "sustained_ratio_pct": 0.0,
+      "avg_engagement_pct": 0.0,
+      "distraction_count": 0,
+      "drowsy_count": 0
+    },
+    {
+      "student_id": "STU-005",
+      "name": "Vikram Rao",
+      "status": "Absent (Not Detected)",
+      "first_seen": "N/A",
+      "last_seen": "N/A",
+      "sustained_duration_sec": 0.0,
+      "sustained_ratio_pct": 0.0,
+      "avg_engagement_pct": 0.0,
+      "distraction_count": 0,
+      "drowsy_count": 0
+    }
+  ]
+}

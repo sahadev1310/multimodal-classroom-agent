@@ -1,0 +1,22 @@
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Environments
+env/
+venv/
+ENV/
+.env
+
+# Flask & IDE
+instance/
+.webassets-cache
+.vscode/
+.idea/
+
+# OS specific
+.DS_Store
+Thumbs.db

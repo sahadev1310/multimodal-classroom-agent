@@ -1,0 +1,6 @@
+Student ID,Name,Attendance Status,First Seen,Last Seen,Sustained Duration (s),Sustained Ratio (%),Avg Engagement (%),Distractions,Drowsy Events
+STU-001,Aarav Sharma,Absent (Not Detected),N/A,N/A,0.0,0.0,0.0,0,0
+STU-002,Priya Patel,Absent (Not Detected),N/A,N/A,0.0,0.0,0.0,0,0
+STU-003,Rohan Iyer,Absent (Not Detected),N/A,N/A,0.0,0.0,0.0,0,0
+STU-004,Ananya Sen,Absent (Not Detected),N/A,N/A,0.0,0.0,0.0,0,0
+STU-005,Vikram Rao,Absent (Not Detected),N/A,N/A,0.0,0.0,0.0,0,0

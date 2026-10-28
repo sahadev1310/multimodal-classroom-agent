@@ -1,0 +1,150 @@
+{
+  "session_id": "batch_1793195573",
+  "video_filename": "sample_classroom_lecture.mp4",
+  "video_duration_sec": 5.0,
+  "topic": "Unit Test Batch Processing",
+  "attendance": {
+    "session_id": "batch_1793195573",
+    "session_date": "2026-10-28 19:22:56",
+    "session_duration_sec": 5.0,
+    "session_duration_formatted": "00:00:05",
+    "total_students": 5,
+    "present_count": 0,
+    "partial_count": 0,
+    "absent_count": 5,
+    "attendance_rate_pct": 0.0,
+    "records": [
+      {
+        "student_id": "STU-001",
+        "name": "Aarav Sharma",
+        "status": "Transient (Passerby)",
+        "first_seen": "19:22:56",
+        "last_seen": "19:22:59",
+        "sustained_duration_sec": 2.6,
+        "sustained_ratio_pct": 52.0,
+        "avg_engagement_pct": 84.1,
+        "distraction_count": 0,
+        "drowsy_count": 0
+      },
+      {
+        "student_id": "STU-002",
+        "name": "Priya Patel",
+        "status": "Transient (Passerby)",
+        "first_seen": "19:22:56",
+        "last_seen": "19:22:59",
+        "sustained_duration_sec": 2.6,
+        "sustained_ratio_pct": 52.0,
+        "avg_engagement_pct": 84.1,
+        "distraction_count": 0,
+        "drowsy_count": 0
+      },
+      {
+        "student_id": "STU-003",
+        "name": "Rohan Iyer",
+        "status": "Transient (Passerby)",
+        "first_seen": "19:22:56",
+        "last_seen": "19:22:59",
+        "sustained_duration_sec": 2.6,
+        "sustained_ratio_pct": 52.0,
+        "avg_engagement_pct": 84.1,
+        "distraction_count": 0,
+        "drowsy_count": 0
+      },
+      {
+        "student_id": "STU-004",
+        "name": "Ananya Sen",
+        "status": "Absent (Not Detected)",
+        "first_seen": "N/A",
+        "last_seen": "N/A",
+        "sustained_duration_sec": 0.0,
+        "sustained_ratio_pct": 0.0,
+        "avg_engagement_pct": 0.0,
+        "distraction_count": 0,
+        "drowsy_count": 0
+      },
+      {
+        "student_id": "STU-005",
+        "name": "Vikram Rao",
+        "status": "Absent (Not Detected)",
+        "first_seen": "N/A",
+        "last_seen": "N/A",
+        "sustained_duration_sec": 0.0,
+        "sustained_ratio_pct": 0.0,
+        "avg_engagement_pct": 0.0,
+        "distraction_count": 0,
+        "drowsy_count": 0
+      }
+    ]
+  },
+  "dynamics": {
+    "total_duration_sec": 4,
+    "duration_formatted": "00:00:04",
+    "average_cei": 76.2,
+    "peak_cei": 78.2,
+    "min_cei": 72.2,
+    "attention_drops": [],
+    "interaction_peaks": [],
+    "time_series": [
+      {
+        "second": 0,
+        "time_str": "00:00:00",
+        "cei": 72.2,
+        "visual_score": 85.0,
+        "motion_score": 50.0,
+        "audio_score": 60.0,
+        "audio_rms": 0.03,
+        "audio_category": "Lecture",
+        "student_count": 3,
+        "attentive_count": 3,
+        "distracted_count": 0,
+        "event": null
+      },
+      {
+        "second": 1,
+        "time_str": "00:00:01",
+        "cei": 78.2,
+        "visual_score": 85.0,
+        "motion_score": 90.0,
+        "audio_score": 60.0,
+        "audio_rms": 0.03,
+        "audio_category": "Lecture",
+        "student_count": 3,
+        "attentive_count": 3,
+        "distracted_count": 0,
+        "event": null
+      },
+      {
+        "second": 2,
+        "time_str": "00:00:02",
+        "cei": 78.2,
+        "visual_score": 85.0,
+        "motion_score": 90.0,
+        "audio_score": 60.0,
+        "audio_rms": 0.03,
+        "audio_category": "Lecture",
+        "student_count": 3,
+        "attentive_count": 3,
+        "distracted_count": 0,
+        "event": null
+      },
+      {
+        "second": 3,
+        "time_str": "00:00:03",
+        "cei": 76.0,
+        "visual_score": 85.0,
+        "motion_score": 75.0,
+        "audio_score": 60.0,
+        "audio_rms": 0.03,
+        "audio_category": "Lecture",
+        "student_count": 3,
+        "attentive_count": 3,
+        "distracted_count": 0,
+        "event": null
+      }
+    ]
+  },
+  "audio_report": {
+    "error": "Failed to analyze audio file: Error opening 'C:\\\\Users\\\\vishw\\\\.gemini\\\\antigravity\\\\scratch\\\\multimodal-classroom-agent\\\\storage\\\\uploads\\\\sample_classroom_lecture.mp4': Format not recognised."
+  },
+  "suggestions": []
+}

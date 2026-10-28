@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Roster & Enrollment | Multimodal Agent</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <a href="/" class="nav-brand">
+            <div class="brand-icon">🎓</div>
+            <span>Classroom Multimodal Intelligence</span>
+        </a>
+        <nav class="nav-links">
+            <a href="/" class="nav-link">Live Classroom</a>
+            <a href="/upload" class="nav-link">Batch Video Analysis</a>
+            <a href="/analytics" class="nav-link">Session Analytics</a>
+            <a href="/roster" class="nav-link active">Student Roster</a>
+        </nav>
+        <div class="nav-actions">
+            <span class="badge-offline">
+                <span class="pulse-dot"></span> 100% Privacy-Preserving Offline
+            </span>
+        </div>
+    </header>
+
+    <main class="app-container">
+
+        <!-- ENROLLMENT FORM & ROSTER OVERVIEW -->
+        <div class="dashboard-grid">
+
+            <!-- LEFT: ENROLLMENT FORM -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span>➕ Enroll New Student Profile</span>
+                    </h2>
+                </div>
+                <p style="font-size: 0.86rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+                    Pre-enrolled students are automatically correlated with tracked participants during live classroom sessions.
+                </p>
+
+                <form id="enrollForm">
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div>
+                            <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.35rem;">Student ID:</label>
+                            <input type="text" id="studentIdInput" placeholder="e.g. STU-006" required
+                                   style="width: 100%; padding: 0.65rem; background: rgba(15,23,42,0.85); border: 1px solid var(--border-color); border-radius: 8px; color: #fff;">
+                        </div>
+
+                        <div>
+                            <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.35rem;">Full Name:</label>
+                            <input type="text" id="nameInput" placeholder="e.g. Maya Nambiar" required
+                                   style="width: 100%; padding: 0.65rem; background: rgba(15,23,42,0.85); border: 1px solid var(--border-color); border-radius: 8px; color: #fff;">
+                        </div>
+
+                        <div>
+                            <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.35rem;">Department / Major:</label>
+                            <input type="text" id="deptInput" placeholder="e.g. Artificial Intelligence"
+                                   style="width: 100%; padding: 0.65rem; background: rgba(15,23,42,0.85); border: 1px solid var(--border-color); border-radius: 8px; color: #fff;">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">
+                            ✅ Enroll Student
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- RIGHT: ROSTER TABLE -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span>📋 Enrolled Class Roster (<span id="rosterCount">{{ roster|length }}</span>)</span>
+                    </h2>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Full Name</th>
+                                <th>Department</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rosterTableBody">
+                            {% for sid, profile in roster.items() %}
+                                <tr>
+                                    <td><strong>{{ sid }}</strong></td>
+                                    <td>{{ profile.name }}</td>
+                                    <td>{{ profile.department }}</td>
+                                    <td>
+                                        <button class="btn btn-danger btn-sm" onclick="removeStudent('{{ sid }}')">Remove</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <p>Multimodal Attendance & Engagement Agent &copy; 2026 | Computer Vision &bull; Audio Signal Processing &bull; Agentic Decision Support</p>
+    </footer>
+
+    <script>
+        document.getElementById("enrollForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const sid = document.getElementById("studentIdInput").value.trim();
+            const name = document.getElementById("nameInput").value.trim();
+            const dept = document.getElementById("deptInput").value.trim();
+
+            try {
+                const res = await fetch("/api/roster", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ student_id: sid, name: name, department: dept })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert(`Student ${name} (${sid}) enrolled successfully!`);
+                    window.location.reload();
+                } else {
+                    alert("Error: " + data.error);
+                }
+            } catch (err) {
+                alert("Enrollment request failed: " + err.message);
+            }
+        });
+
+        async function removeStudent(studentId) {
+            if (!confirm(`Are you sure you want to remove ${studentId} from the active roster?`)) return;
+
+            try {
+                const res = await fetch("/api/roster", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ student_id: studentId })
+                });
+                if (res.ok) {
+                    window.location.reload();
+                }
+            } catch (err) {
+                alert("Removal failed: " + err.message);
+            }
+        }
+    </script>
+</body>
+</html>

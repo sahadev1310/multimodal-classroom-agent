@@ -1,0 +1,6 @@
+Student ID,Name,Attendance Status,First Seen,Last Seen,Sustained Duration (s),Sustained Ratio (%),Avg Engagement (%),Distractions,Drowsy Events
+STU-001,Aarav Sharma,Present,21:37:49,21:40:06,118.4,62.5,100.0,0,0
+STU-002,Priya Patel,Absent (< 30% presence),21:38:09,21:38:12,3.0,1.6,93.4,0,0
+STU-003,Rohan Iyer,Transient (Passerby),21:39:48,21:39:49,1.1,0.6,84.8,0,0
+STU-004,Ananya Sen,Absent (Not Detected),N/A,N/A,0.0,0.0,0.0,0,0
+STU-005,Vikram Rao,Absent (Not Detected),N/A,N/A,0.0,0.0,0.0,0,0

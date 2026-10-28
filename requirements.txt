@@ -1,0 +1,26 @@
+# Core Framework & Web Gateway
+flask>=3.1.0
+werkzeug>=3.1.0
+jinja2>=3.1.2
+
+# Computer Vision & Machine Learning
+opencv-python>=4.10.0
+opencv-contrib-python>=4.10.0
+mediapipe>=0.10.14
+numpy>=1.26.0
+scipy>=1.14.0
+scikit-learn>=1.5.0
+pillow>=10.0.0
+
+# Audio Processing & Signal Analysis
+librosa>=0.10.0
+sounddevice>=0.5.0
+pyaudio>=0.2.14
+soundfile>=0.12.0
+
+# Data Visualization & Reporting
+matplotlib>=3.9.0
+pandas>=2.2.0
+
+# AI Service Layer (Optional Hybrid / Online Enhancement)
+google-genai>=0.1.0
